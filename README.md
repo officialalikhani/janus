@@ -27,13 +27,13 @@ packagelist=(
     automake
     gtk-doc-tools
     cmake
-	  wget
-	  curl
+    wget
+    curl
     tar
     libnice-dev
     libnanomsg-dev
-	  build-essential 
-	  libssl-dev
+    build-essential 
+    libssl-dev
 )
 apt-get  update
 apt-get -y install ${packagelist[@]}
