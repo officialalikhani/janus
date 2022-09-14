@@ -1,30 +1,21 @@
 FROM ubuntu:18.04
 
-COPY ./install-dependences.sh ./
-#install-dependences
-RUN bash install-dependences.sh
-
+COPY ./* ./
+#install-dependencies
+RUN bash install-dependencies.sh
 #install-CMAKE
-RUN wget https://github.com/Kitware/CMake/releases/download/v3.20.2/cmake-3.20.2.tar.gz && \
-	tar -zxvf cmake-3.20.2.tar.gz && \
-	cd cmake-3.20.2 && \
-	./bootstrap && \
-	make && \
-	make install && \  
-	
+RUN bash install-cmake.sh
 #install-libsrtp
 RUN wget https://github.com/cisco/libsrtp/archive/v2.2.0.tar.gz && \
 	tar xfv v2.2.0.tar.gz && \
 	cd libsrtp-2.2.0 && \
 	./configure --prefix=/usr --enable-openssl && \
 	make shared_library &&  make install && \
-
 #install-usrsctp
 RUN git clone https://github.com/sctplab/usrsctp && \
 	cd usrsctp && \
 	./bootstrap && \
 	./configure --prefix=/usr && make &&  make install && \ 
-
 #install-libwebsockets
 RUN git clone https://libwebsockets.org/repo/libwebsockets && \
 	cd libwebsockets && \
@@ -33,12 +24,10 @@ RUN git clone https://libwebsockets.org/repo/libwebsockets && \
 	cd build && \
 	cmake -DLWS_MAX_SMP=1 -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_C_FLAGS="-fpic" .. && \
 	make &&  make install && \
-
 #install-mqtt
 RUN git clone https://github.com/eclipse/paho.mqtt.c.git && \
 	cd paho.mqtt.c && \
 	prefix=/usr make install && \
-
 #install-rabbitmqc
 RUN git clone https://github.com/alanxz/rabbitmq-c && \
 	cd rabbitmq-c && \
@@ -47,7 +36,6 @@ RUN git clone https://github.com/alanxz/rabbitmq-c && \
 	mkdir builds && cd builds && \
 	cmake -DCMAKE_INSTALL_PREFIX=/usr .. && \
 	make &&  make install
-
 #install-openssl
 RUN wget https://ftp.openssl.org/source/openssl-1.1.1k.tar.gz && \
 	tar -xzvf openssl-1.1.1k.tar.gz \
@@ -58,7 +46,6 @@ RUN wget https://ftp.openssl.org/source/openssl-1.1.1k.tar.gz && \
 	touch /etc/profile.d/openssl.sh \
 	echo 'export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64' > /etc/profile.d/openssl.sh && \
 	source /etc/profile.d/openssl.sh && \
-
 #install-janus-gateway
 RUN git clone https://github.com/meetecho/janus-gateway.git && \
 	cd janus-gateway && \
