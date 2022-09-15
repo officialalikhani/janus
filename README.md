@@ -101,12 +101,12 @@ RUN cd /tmp && \
 #install-openssl
 RUN cd /tmp && \
         wget https://ftp.openssl.org/source/openssl-1.1.1k.tar.gz && \
-        tar -xzvf openssl-1.1.1k.tar.gz \
-        cd openssl-1.1.1k \
+        tar -xzvf openssl-1.1.1k.tar.gz && \
+        cd openssl-1.1.1k && \
         ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib no-shared zlib-dynamic && \
-        make \
-        make install \
-        touch /etc/profile.d/openssl.sh \
+        make && \
+        make install && \
+        touch /etc/profile.d/openssl.sh && \
         echo 'export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64' > /etc/profile.d/openssl.sh && \
         source /etc/profile.d/openssl.sh
 #install-janus-gateway
@@ -118,7 +118,14 @@ RUN cd /tmp && \
         make && \
         make insall && \
         make configs
-	
+#Launch janus
+RUN cd ~/janus-gateway && \
+	touch run_janus.sh && \
+	echo "/opt/janus/bin/janus &" >>run_janus.sh && \
+	echo "cd /root/janus-gateway/html" >>run_janus.sh && \
+	echo "ws&" >>run_janus.sh && \
+	chmod 755 run_janus.sh
+
 EXPOSE 10000-10200/udp
 EXPOSE 8188
 EXPOSE 8088
@@ -127,6 +134,4 @@ EXPOSE 8889
 EXPOSE 8000
 EXPOSE 7088
 EXPOSE 7089
-
-CMD ["/opt/janus/bin/janus --help"]
 ```
