@@ -61,6 +61,13 @@ RUN cd /tmp && \
         make && \
         make insall && \
         make configs
+#Launch janus
+RUN cd ~/janus-gateway && \
+	touch run_janus.sh && \
+	echo "/opt/janus/bin/janus &" >>run_janus.sh && \
+	echo "cd /root/janus-gateway/html" >>run_janus.sh && \
+	echo "ws&" >>run_janus.sh && \
+	chmod 755 run_janus.sh
 
 EXPOSE 10000-10200/udp
 EXPOSE 8188
